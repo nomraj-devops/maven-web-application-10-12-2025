@@ -46,13 +46,12 @@ jobs:
         run: |
           IMAGE_BASE=ghcr.io/${{ github.repository_owner }}/tohands
           
-          # Use GitHub Run Number as build number
+          # Use GitHub Run Number as immutable tag
           BUILD_NUMBER=${{ github.run_number }}
+          echo "Using immutable tag: $BUILD_NUMBER"
 
-          echo "Using tag: $BUILD_NUMBER"
-
-          # Build with immutable tag
+          # Build image
           docker build -t $IMAGE_BASE:$BUILD_NUMBER .
 
-          # Push only immutable tag
+          # Push image
           docker push $IMAGE_BASE:$BUILD_NUMBER
