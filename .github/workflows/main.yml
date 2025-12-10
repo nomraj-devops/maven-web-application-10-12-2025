@@ -28,7 +28,7 @@ jobs:
           cp target/*.jar release/
 
       - name: Push artifact to repository
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: java-app-jar
           path: release/
