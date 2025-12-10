@@ -44,7 +44,7 @@ jobs:
       # ---------------- DOCKER BUILD & PUSH ----------------
       - name: Build & Push Docker Image (Immutable Tag)
         run: |
-          IMAGE_BASE=ghcr.io/${{ github.repository_owner }}/java-app
+          IMAGE_BASE=ghcr.io/${{ github.repository_owner }}/tohands
           
           # Use GitHub Run Number as build number
           BUILD_NUMBER=${{ github.run_number }}
