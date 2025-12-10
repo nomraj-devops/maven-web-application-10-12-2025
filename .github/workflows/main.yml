@@ -26,14 +26,14 @@ jobs:
         run: |
           mkdir -p release
           cp target/*.war release/
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: java-app-war
           path: release/
 
-      # ---------- DOCKER BUILD & PUSH -----------------
-
+      # ---------------- GHCR LOGIN ----------------
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -41,16 +41,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Build Docker Image
+      # ---------------- DOCKER BUILD & PUSH ----------------
+      - name: Build & Push Docker Image (Immutable Tag)
         run: |
           IMAGE_BASE=ghcr.io/${{ github.repository_owner }}/java-app
+          
+          # Use GitHub Run Number as build number
           BUILD_NUMBER=${{ github.run_number }}
 
-          docker build -t $IMAGE_BASE:latest -t $IMAGE_BASE:$BUILD_NUMBER .
+          echo "Using tag: $BUILD_NUMBER"
 
-      - name: Push Docker Image
-        run: |
-          IMAGE_BASE=ghcr.io/${{ github.repository_owner }}/java-app
-          BUILD_NUMBER=${{ github.run_number }}
+          # Build with immutable tag
+          docker build -t $IMAGE_BASE:$BUILD_NUMBER .
 
+          # Push only immutable tag
           docker push $IMAGE_BASE:$BUILD_NUMBER
